@@ -20,6 +20,18 @@ app.use("/api/users",userRouter);
 // Serve static files from the 'public' directory
 app.use('/photos', express.static('public/photos'));
 
+
+// test 
+function getJsonData() {
+    return { data: 1234 };
+}
+
+// إعداد مسار API
+app.get('/api/data', (req, res) => {
+    res.json(getJsonData());
+});
+// end test
+
 app.all("*",(req,res,next)=>{
     res.status(404).json({
         message: "wrong URL",
