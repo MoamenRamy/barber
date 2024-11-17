@@ -1,0 +1,6 @@
+node_modules
+# Keep environment variables out of version control
+
+barber-backend-master.zip
+knexfile.js
+.env
