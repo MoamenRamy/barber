@@ -100,23 +100,28 @@ exports.changePassword = catchAsync (async (req,res,next)=>{
         user,
     });
 });
-const generateAndSendOTP = async (email,userId,message)=>{
+const generateAndSendOTP = async (email, userId, message) => {
     const otp = generateOTP();
-    message = message + " " +  otp;
-    const user =  await saveOTP(userId,otp);
-    if (isNaN(email)){
+    message = message + " " + otp;
+    await saveOTP(userId, otp); // Save OTP to the database.
+    // test
 
-        await  sendOTP(email,message);
-    }else {
-        await  sendPhoneOTP(email,message);
-    }
-    console.log(user,otp);
-}
+    await sendOTP(email, message);
+
+    // if (isNaN(email)) {
+    //     await sendOTP(email, message); // Send email if input is not numeric.
+    // } else {
+    //     await sendPhoneOTP(email, message); // Otherwise, send SMS (if enabled).
+    // }
+    console.log("OTP sent to", email, otp);
+};
 const generateOTP = () => {
-    // const otp = crypto.randomInt(100000, 999999).toString(); // Generate a 6-digit OTP
-    const otp = "123456"  // delete it in production
+    const otp = crypto.randomInt(100000, 999999).toString(); // Generate a 6-digit OTP
+    // const otp = "123456"  // delete it in production 
     return otp;
   };
+
+  // test this func
 const sendOTP = async (email,message) => {
     try {
         await sendEmail({

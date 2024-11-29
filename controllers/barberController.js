@@ -293,3 +293,5 @@ exports.getAllbooked = catchAsync(async (req,res,next)=>{
         bookings,
     });
 });
+
+// func to make barber choise his payment methos [cash, visa]

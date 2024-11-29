@@ -18,7 +18,9 @@ app.use("/api/barbers",barberRouter);
 app.use("/api/users",userRouter);
 
 // Serve static files from the 'public' directory
-app.use('/photos', express.static('public/photos'));
+app.use('/barbers/photos', express.static('public/photos'));
+app.use('/users/photos', express.static('public/users'));
+app.use('packages/photos', express.static('public/packages'));
 
 
 // test 
