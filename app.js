@@ -21,8 +21,8 @@ app.use("/api/users",userRouter);
 
 // Serve static files from the 'public' directory
 app.use('/photos', express.static(path.join(__dirname, 'public', 'photos')));
-app.use('/users', express.static('public/users'));
-app.use('/packages', express.static('public/packages'));
+app.use('/users', express.static(path.join(__dirname, 'public', 'users')));
+app.use('/packages', express.static(path.join(__dirname, 'public', 'packages')));
 
 
 // test 
