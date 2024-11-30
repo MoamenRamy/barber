@@ -19,27 +19,12 @@ app.use("/api/users",userRouter);
 
 // Serve static files from the 'public' directory
 app.use('/barbers/photos', express.static('public/photos'));
-app.use('/users/photos', async (req, res, next) => {
-    const filePath = path.join(__dirname, 'public/users', req.url);
-    let attempts = 0;
-    const maxAttempts = 5;
-
-    const checkFile = () => {
-        attempts++;
-        if (fs.existsSync(filePath)) {
-            res.sendFile(filePath, {
-                headers: { 'Cache-Control': 'no-store' },
-            });
-        } else if (attempts < maxAttempts) {
-            // Retry after a small delay (e.g., 100ms)
-            setTimeout(checkFile, 100);
-        } else {
-            res.status(404).json({ status: 404, message: 'File not found' });
-        }
-    };
-
-    checkFile();
-});
+app.use('/users/photos', express.static('./public/users', {
+    fallthrough: false, // Ensures 404 for missing files
+    setHeaders: (res) => {
+        res.set('Cache-Control', 'no-store');
+    }
+}));
 app.use('packages/photos', express.static('public/packages'));
 
 
