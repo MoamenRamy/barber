@@ -19,7 +19,7 @@ app.use("/api/users",userRouter);
 
 // Serve static files from the 'public' directory
 app.use('/barbers/photos', express.static('public/photos'));
-app.use('/users/photos', express.static('./public/users', {
+app.use('/users/photos', express.static('public/users', {
     fallthrough: false, // Ensures 404 for missing files
     setHeaders: (res) => {
         res.set('Cache-Control', 'no-store');
