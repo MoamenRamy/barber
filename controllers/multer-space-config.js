@@ -5,23 +5,24 @@ const AppError = require("../utils/AppError");
 
 // Configure S3 client for DigitalOcean Spaces
 const s3Client = new S3Client({
-    endpoint: process.env.DO_SPACES_ENDPOINT,
-    region: "us-east-1",
+    endpoint: 'https://salonbarber.nyc3.digitaloceanspaces.com',  // This should be the endpoint for your Space (without `/public`)
+    region: 'nyc3',  // Region of your space (adjust if necessary)
     credentials: {
-        accessKeyId: process.env.DO_SPACES_KEY,
-        secretAccessKey: process.env.DO_SPACES_SECRET
+        accessKeyId: 'DO006HNPCVDZRH87WK6F',
+        secretAccessKey: 'We7raxMqxTw5vpIB7iVa2sO67eXke8EYrBjYGtH5dyU'
     },
     forcePathStyle: true // Required for DigitalOcean Spaces
 });
 
-// Configure multer-s3
+// Configure multer-s3 to upload photos to the desired folder
 const s3Storage = multerS3({
     s3: s3Client,
-    bucket: process.env.DO_SPACES_BUCKET,
-    acl: 'public-read',
-    contentType: multerS3.AUTO_CONTENT_TYPE,
+    bucket: process.env.DO_SPACES_BUCKET, // Your Space's bucket name
+    acl: 'public-read', // This allows public read access to the file
+    contentType: multerS3.AUTO_CONTENT_TYPE, // Automatically sets the content type
     key: function (req, file, cb) {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        // Upload the file under /public/photos/ in the Space
         cb(null, `photos/${uniqueSuffix}-${file.originalname}`);
     }
 });
@@ -30,9 +31,10 @@ const s3Storage = multerS3({
 const upload = multer({
     storage: s3Storage,
     limits: {
-        fileSize: 5 * 1024 * 1024 // 5MB limit
+        fileSize: 5 * 1024 * 1024 // Limit file size to 5MB
     },
     fileFilter: (req, file, cb) => {
+        // Only allow image files
         if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
             return cb(new AppError('Only image files are allowed!', 400), false);
         }
@@ -40,4 +42,4 @@ const upload = multer({
     }
 });
 
-module.exports = upload;
+module.exports = upload; // Export the upload middleware

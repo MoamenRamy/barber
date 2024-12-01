@@ -17,6 +17,10 @@ exports.register = catchAsync(async (req,res,next)=>{
 
     // If a file is uploaded, save the file path relative to the 'public' folder
     const photo = req.file ? `/users/${req.file.filename}` : null; // Path to the uploaded file
+        // const photo = req.file ? req.file.location : null;  // DigitalOcean Spaces provides a 'location' with the file URL
+        if (!photo) {
+            return next(new AppError('No photo uploaded!', 400));
+        }
 
     const { email, password, ...otherDetails } = req.body;
     if(!email || !password){

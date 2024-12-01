@@ -1,6 +1,8 @@
 const authController = require("../controllers/authController");
 const router=require("express").Router();
 const upload = require('../utils/userUpload'); // Import the multer upload middleware
+// const upload = require('../utils/uploadConfig'); // Import the multer upload middleware
+
 
 
 router.route('/login').post(authController.login);
