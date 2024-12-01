@@ -20,14 +20,22 @@ app.use("/api/barbers",barberRouter);
 app.use("/api/users",userRouter);
 
 // Serve static files from the 'public' directory
-app.use('/photos', express.static(path.join(__dirname, 'utils', 'public', 'photos')));
+app.use('/photos', express.static(path.join(__dirname, 'utils', 'public', 'photos'), {
+    setHeaders: (res, path) => {
+        res.setHeader('Cache-Control', 'public, max-age=31536000');
+    }
+}));
 // app.use('/users', express.static(path.join(__dirname, 'utils','public', 'users')));
 app.use('/users', express.static(path.join(__dirname, 'utils', 'public', 'users'), {
     setHeaders: (res, path) => {
         res.setHeader('Cache-Control', 'public, max-age=31536000');
     }
 }));
-app.use('/packages', express.static(path.join(__dirname, 'utils','public', 'packages')));
+app.use('/packages', express.static(path.join(__dirname, 'utils','public', 'packages'), {
+    setHeaders: (res, path) => {
+        res.setHeader('Cache-Control', 'public, max-age=31536000');
+    }
+}));
 
 
 // test 
