@@ -36,10 +36,10 @@ app.get('/api/data', (req, res) => {
 });
 // end test
 
-app.all("*",(req,res,next)=>{
-    res.status(404).json({
-        message: "wrong URL",
-    });
-});
+// app.all("*",(req,res,next)=>{
+//     res.status(404).json({
+//         message: "wrong URL",
+//     });
+// });
 app.use(errorController);
 module.exports=app;
