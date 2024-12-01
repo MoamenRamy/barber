@@ -20,9 +20,9 @@ app.use("/api/barbers",barberRouter);
 app.use("/api/users",userRouter);
 
 // Serve static files from the 'public' directory
-app.use('/photos', express.static(path.join(__dirname, 'public', 'photos')));
-app.use('/users', express.static(path.join(__dirname, 'public', 'users')));
-app.use('/packages', express.static(path.join(__dirname, 'public', 'packages')));
+app.use('/photos', express.static(path.join(__dirname, 'utils', 'public', 'photos')));
+app.use('/users', express.static(path.join(__dirname, 'utils','public', 'users')));
+app.use('/packages', express.static(path.join(__dirname, 'utils','public', 'packages')));
 
 
 // test 
