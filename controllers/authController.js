@@ -16,7 +16,7 @@ const signToken = (id) => {
 exports.register = catchAsync(async (req,res,next)=>{
 
     // If a file is uploaded, save the file path relative to the 'public' folder
-    const photo = req.file ? `/users/${req.file.filename}` : null; // Save the path to the file
+    const photo = req.file ? `/users/${req.file.filename}` : null; // Path to the uploaded file
 
     const { email, password, ...otherDetails } = req.body;
     if(!email || !password){
