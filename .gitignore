@@ -4,5 +4,5 @@ node_modules
 barber-backend-master.zip
 barber-backend-master2.zip
 knexfile.js
-utils/public/
+# utils/public/
 .env
