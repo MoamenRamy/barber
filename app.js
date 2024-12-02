@@ -19,7 +19,7 @@ app.use('/api/packages',packageRouter);
 app.use("/api/barbers",barberRouter);
 app.use("/api/users",userRouter);
 
-// Serve static files from the 'public' directory
+// Serve static files from the 'public' directory  -
 app.use('/photos', express.static(path.join(__dirname, 'utils', 'public', 'photos'), {
     setHeaders: (res, path) => {
         res.setHeader('Cache-Control', 'public, max-age=31536000');
