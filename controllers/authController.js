@@ -69,7 +69,7 @@ exports.register = catchAsync(async (req,res,next)=>{
         });
     }
     
-    await generateAndSendOTP(email,user.id,"Here is your OTP to Verfiy");
+    await generateAndSendOTP(email, user.id, user.name,"Here is your OTP to Verfiy");
     res.status(200).json({
         user
     });
@@ -107,13 +107,13 @@ exports.changePassword = catchAsync (async (req,res,next)=>{
         user,
     });
 });
-const generateAndSendOTP = async (email, userId, message) => {
+const generateAndSendOTP = async (email, userId, name, message) => {
     const otp = generateOTP();
     message = message + " " + otp;
     await saveOTP(userId, otp); // Save OTP to the database.
     // test
 
-    await sendOTP(email, message);
+    await sendOTP(email, name, message);
 
     // if (isNaN(email)) {
     //     await sendOTP(email, message); // Send email if input is not numeric.
@@ -129,11 +129,12 @@ const generateOTP = () => {
   };
 
   // test this func
-const sendOTP = async (email,message) => {
+const sendOTP = async (email, name, message) => {
     try {
         await sendEmail({
             email: email,
             subject: "your OTP (valid for 30 min)",
+            name: name,
             message,
         });
     } catch (err) {
