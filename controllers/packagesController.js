@@ -26,7 +26,8 @@ exports.getAllPackages = catchAsync(async (req,res,next)=>{
 });
 exports.createPackage = catchAsync(async (req, res, next) => {
     // If a file is uploaded, save the file path relative to the 'public' folder
-    const photo = req.file ? `/packages/${req.file.filename}` : null; // Save the path to the file
+    // const photo = req.file ? `/packages/${req.file.filename}` : null; // Save the path to the file
+    const photo = req.file ? req.file.location : null; // Use location if uploading to S3/DigitalOcean Spaces
 
     // Convert the price to a float if it's a string
     const price = parseFloat(req.body.price);

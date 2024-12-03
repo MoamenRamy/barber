@@ -9,6 +9,7 @@ const packageRouter = require('./routers/packageRouter');
 const barberRouter = require('./routers/barberRouter');
 const userRouter = require('./routers/userRouter');
 const path = require('path');
+const uploadd = require('./utils/uploadConfig');
 
 app.use(express.json());
 
@@ -36,6 +37,11 @@ app.use('/packages', express.static(path.join(__dirname, 'utils','public', 'pack
         res.setHeader('Cache-Control', 'public, max-age=31536000');
     }
 }));
+
+
+app.post('/upload', uploadd.single('image'), (req, res) => {
+    res.json({ fileUrl: req.file.location });
+});
 
 
 // test 

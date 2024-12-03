@@ -16,9 +16,12 @@ const signToken = (id) => {
 exports.register = catchAsync(async (req,res,next)=>{
 
     // If a file is uploaded, save the file path relative to the 'public' folder
-    const photo = req.file ? `/users/${req.file.filename}` : null; // Path to the uploaded file
-        // const photo = req.file ? req.file.location : null;  // DigitalOcean Spaces provides a 'location' with the file URL
-        if (!photo) {
+    // const photo = req.file ? `/users/${req.file.filename}` : null; // Path to the uploaded file
+    // const photo = req.file ? req.file.location : null;  // DigitalOcean Spaces provides a 'location' with the file URL
+    
+    const photo = req.file ? req.file.location : null; // Use location if uploading to S3/DigitalOcean Spaces
+    
+    if (!photo) {
             return next(new AppError('No photo uploaded!', 400));
         }
 
