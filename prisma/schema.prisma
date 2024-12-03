@@ -76,6 +76,14 @@ model barberStore {
   barberServiceTime Decimal            @default(1)
   favorite          favorite[]
   rating            Decimal            @default(5)
+  barberStorePhotos barberStorePhoto[] // Add this line to relate photos to the barber store
+}
+
+model barberStorePhoto {
+  id            Int      @id @unique @default(autoincrement())
+  photoUrl      String   // URL or path to the photo
+  barberStoreId Int
+  barberStore   barberStore @relation(fields: [barberStoreId], references: [id])
 }
 
 model packages {

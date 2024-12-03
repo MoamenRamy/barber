@@ -19,65 +19,67 @@ exports.changeBookingStatus = catchAsync(async (req,res,next)=>{
         booking,
     });
 });
-exports.getStoreById = catchAsync(async (req,res,next)=>{
-    const {id} = req.params;
+exports.getStoreById = catchAsync(async (req, res, next) => {
+    const { id } = req.params;
     const store = await prisma.barberStore.findUnique({
-        where:{
-            id:+id
+        where: {
+            id: +id,
         },
-        include:{
-            barber_service:true,
-            user:true,
-            booking:{
-                include:{
-                    user:true,
-                    booking_services:true
-                }
-            }
-        }
+        include: {
+            barber_service: true,
+            user: true,
+            booking: {
+                include: {
+                    user: true,
+                    booking_services: true,
+                },
+            },
+            barberStorePhotos: true, // Include the photos
+        },
     });
     res.status(200).json({
-        store
+        store,
     });
 });
-exports.getMyStores = catchAsync(async (req,res,next)=>{
 
+exports.getMyStores = catchAsync(async (req, res, next) => {
     const stores = await prisma.barberStore.findMany({
-        where:{
-            userId:+req.user.id,
-            
+        where: {
+            userId: +req.user.id,
         },
-        include:{
-            barber_service:true,
-            booking:{
-                where:{
-                    status:{
-                        not:"Finished"
-                    }
-                },
-                include:{
-                    user:true,
-                    booking_services:{
-                        include:{
-                           service:true
-                        }
-                    
+        include: {
+            barber_service: true, // Include barber services associated with the store
+            barberStorePhotos: true, // Include photos associated with the store
+            booking: {
+                where: {
+                    status: {
+                        not: "Finished",
                     },
-
                 },
-                orderBy:{
-                    Date:"asc"
-                }
-            }
-            
-            
-        }
+                include: {
+                    user: true, // Include the user who made the booking
+                    booking_services: {
+                        include: {
+                            service: true, // Include the service details for the booking
+                        },
+                    },
+                },
+                orderBy: {
+                    Date: "asc", // Order the bookings by date in ascending order
+                },
+            },
+        },
     });
+
+    // Optionally, log the stores to inspect the result
     console.log(stores);
+
+    // Return the stores along with their associated barberStorePhotos
     res.status(200).json({
-        stores
+        stores,
     });
 });
+
 exports.getActiveStoreBookings = catchAsync(async (req,res,next)=>{
     const {id} = req.params;
     const bookings = await prisma.booking.findMany({
@@ -131,35 +133,60 @@ exports.createServices = catchAsync(async(req,res,next)=>{
     req.serviceId = servicesId;
     next();
 });
-exports.createStore = catchAsync(async (req,res,next)=>{
+exports.createStore = catchAsync(async (req, res, next) => {
     const servicesId = req.serviceId;
     req.body.services = undefined;
 
-    // If a file is uploaded, save the file path relative to the 'public' folder
-    const photo = req.file ? `/photos/${req.file.filename}` : null; // Save the path to the file
+    // Handle the photo upload and limit the number of photos to 10
+    const photos = req.files ? req.files.slice(0, 10).map(file => `/photos/${file.filename}`) : [];
 
+    // Create the store record
     const store = await prisma.barberStore.create({
-        data:{
-            userId : req.user.id,
-            photo,
-            ...req.body
-        }
+        data: {
+            userId: req.user.id,
+            photo: photos[0] || null, // Set the first photo as the main photo
+            ...req.body,
+        },
     });
-    await servicesId.forEach(async id => {
-        await prisma.barber_service.update({
-            where:{
-                id:+id,
 
-            },
-            data:{
-                barberStoreId : store.id
-            }
-        });
+    // Save additional photos to barberStorePhotos (limit to 10)
+    await Promise.all(
+        photos.map(async (photoUrl) => {
+            await prisma.barberStorePhoto.create({
+                data: {
+                    photoUrl,
+                    barberStoreId: store.id,
+                },
+            });
+        })
+    );
+
+    // Fetch the barber store and associated photos to include in the response
+    const storeWithPhotos = await prisma.barberStore.findUnique({
+        where: { id: store.id },
+        include: {
+            barberStorePhotos: true, // Include the photos associated with the store
+        },
     });
+
+    // Update services if necessary
+    await Promise.all(
+        servicesId.map(async (id) => {
+            await prisma.barber_service.update({
+                where: { id: +id },
+                data: { barberStoreId: store.id },
+            });
+        })
+    );
+
+    // Send the response including the store and its associated photos
     res.status(201).json({
-        store,
+        store: storeWithPhotos,  // The store with the associated barberStorePhotos
     });
 });
+
+
+
 
 // exports.createStore = catchAsync(async (req, res, next) => {
 //     const servicesId = req.serviceId; // Ensure this is being set correctly
