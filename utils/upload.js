@@ -13,14 +13,13 @@ const s3 = new S3Client({
     }
 });
 
-// Set up storage configuration for DigitalOcean Spaces using multer-s3
 const storage = multerS3({
     s3: s3,
-    bucket: 'salonbarber', // Your DigitalOcean Space name
-    acl: 'public-read', // Makes the file publicly readable
+    bucket: 'salonbarber',
+    acl: 'public-read',
+    contentType: multerS3.AUTO_CONTENT_TYPE, // Automatically sets the correct Content-Type
     key: (req, file, cb) => {
-        // Generate a unique file name using timestamp + file extension
-        cb(null, `photos/${Date.now()}${path.extname(file.originalname)}`); // Set the file path in Space
+        cb(null, `photos/${Date.now()}${path.extname(file.originalname)}`);
     }
 });
 
