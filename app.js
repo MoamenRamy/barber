@@ -11,7 +11,7 @@ const userRouter = require('./routers/userRouter');
 const path = require('path');
 const uploadd = require('./utils/uploadConfig');
 
-app.use(express.json());
+app.use(express.json({limit:'100mb'}));
 
 app.use(cors());
 
