@@ -152,7 +152,7 @@ exports.createStore = catchAsync(async (req, res, next) => {
             ...req.body,
         },
     });
-
+    console.log(store);
     // Save additional photos to barberStorePhotos (limit to 10)
     await Promise.all(
         photos.map(async (photoUrl) => {
@@ -165,6 +165,7 @@ exports.createStore = catchAsync(async (req, res, next) => {
         })
     );
 
+
     // Fetch the barber store and associated photos to include in the response
     const storeWithPhotos = await prisma.barberStore.findUnique({
         where: { id: store.id },
@@ -172,6 +173,8 @@ exports.createStore = catchAsync(async (req, res, next) => {
             barberStorePhotos: true, // Include the photos associated with the store
         },
     });
+    console.log(storeWithPhotos);
+
 
     // Update services if necessary
     await Promise.all(
