@@ -176,6 +176,7 @@ exports.createStore = catchAsync(async (req, res, next) => {
         where: { id: store.id },
         include: {
             barberStorePhotos: true, // Include the photos associated with the store
+            barber_service:true,
         },
     });
     console.log(storeWithPhotos);
