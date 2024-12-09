@@ -136,7 +136,7 @@ exports.createServices = catchAsync(async(req,res,next)=>{
 exports.createStore = catchAsync(async (req, res, next) => {
     const servicesId = req.serviceId;
     req.body.services = undefined;
-    req.body.photos =undefined;
+   
 
 
     // Handle the photo upload and limit the number of photos to 10
@@ -144,6 +144,7 @@ exports.createStore = catchAsync(async (req, res, next) => {
     const photos = req.files
     ? req.files.slice(0, 10).map((file) => file.location)
     : [];
+     req.body.photos =undefined;
     // Create the store record
     const store = await prisma.barberStore.create({
         data: {
