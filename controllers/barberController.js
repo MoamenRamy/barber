@@ -144,6 +144,10 @@ exports.createStore = catchAsync(async (req, res, next) => {
     const photos = req.files
     ? req.files.slice(0, 10).map((file) => file.location)
     : [];
+    console.log(req.files);
+    
+    console.log(photos);
+    
      req.body.photos =undefined;
     // Create the store record
     const store = await prisma.barberStore.create({
