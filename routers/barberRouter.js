@@ -1,6 +1,7 @@
 const { multipleUpload } = require('../utils/upload'); // Correct declaration
 const authController = require("../controllers/authController");
 const barberController = require("../controllers/barberController");
+const adminController = require("../controllers/adminController");
 const router=require("express").Router();
 // const upload = require('../utils/upload'); // Import the multer upload middleware
 
@@ -26,6 +27,12 @@ router.route('/services').get(barberController.getAllServices);
 router.route('/bookings/status/:id').post(barberController.changeBookingStatus);
 router.route('/bookings/active/:id').get(barberController.getActiveStoreBookings);
 router.route('/bookings/:id').get(barberController.getStoreBookings);
+
+// admin
+router.route('/admin/allBarbers').get(authController.restrictTo("Admin"), adminController.adminGetAllBarbers);
+router.route('/admin/allBookings').get(authController.restrictTo("Admin"), adminController.adminGetAllBookings);
+
+
 
 
 module.exports=router;

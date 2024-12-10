@@ -8,6 +8,7 @@ const authRouter = require('./routers/authRouter');
 const packageRouter = require('./routers/packageRouter');
 const barberRouter = require('./routers/barberRouter');
 const userRouter = require('./routers/userRouter');
+// const adminRouter = require('./routers/adminRouter');
 const path = require('path');
 const uploadd = require('./utils/uploadConfig');
 
@@ -19,6 +20,7 @@ app.use('/api/auth' ,authRouter );
 app.use('/api/packages',packageRouter);
 app.use("/api/barbers",barberRouter);
 app.use("/api/users",userRouter);
+// app.use("/api/admin",adminRouter);
 
 // Serve static files from the 'public' directory  -
 app.use('/photos', express.static(path.join(__dirname, 'utils', 'public', 'photos'), {

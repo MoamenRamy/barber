@@ -30,6 +30,7 @@ model user {
   gender          gender        @default(Male)
   booking         booking[]
   favorite        favorite[]
+  ban             Boolean       @default(false)
 }
 
 model favorite {
@@ -77,6 +78,7 @@ model barberStore {
   favorite          favorite[]
   rating            Decimal            @default(5)
   barberStorePhotos barberStorePhoto[] // Add this line to relate photos to the barber store
+  paymentType      Payment_Type       @default(Cash)
 }
 
 model barberStorePhoto {
@@ -136,6 +138,7 @@ enum booking_status {
 enum Payment_Type {
   Cash
   Card
+  both
 }
 
 enum gender {
